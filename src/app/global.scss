@@ -1,0 +1,102 @@
+:root {
+  /* Primary Colors */
+  --background: #1E1E1E;
+  --foreground: #FFFFFF;
+  --accent: #00B4D8;
+  --secondary-accent: #FF6B6B;
+
+  /* Text Colors */
+  --primary-text: #FFFFFF;
+  --secondary-text: #A0A0A0;
+  --disabled-text: #606060;
+
+  /* Data Visualization Colors */
+  --line-chart-1: #00B4D8;
+  --line-chart-2: #FF6B6B;
+  --line-chart-3: #6BFF6B;
+  --line-chart-4: #FFD700;
+  --line-chart-5: #9370DB;
+
+  /* UI Elements */
+  --button-default: #00B4D8;
+  --button-hover: #0096C7;
+  --button-active: #0077B6;
+  --button-disabled: #606060;
+
+  --input-background: #2E2E2E;
+  --input-border: #00B4D8;
+  --input-text: #FFFFFF;
+
+  --dropdown-background: #2E2E2E;
+  --dropdown-hover: #3E3E3E;
+  --dropdown-selected: #00B4D8;
+
+  /* Status Indicators */
+  --success: #6BFF6B;
+  --warning: #FFD700;
+  --error: #FF6B6B;
+  --info: #00B4D8;
+
+  /* Sidebar/Panels */
+  --sidebar-background: #2E2E2E;
+  --sidebar-header: #1E1E1E;
+  --sidebar-border: #3E3E3E;
+
+  /* Graphs/Charts */
+  --grid-lines: #3E3E3E;
+  --axis-labels: #A0A0A0;
+  --data-points: #00B4D8;
+
+  /* Tooltips */
+  --tooltip-background: #2E2E2E;
+  --tooltip-text: #FFFFFF;
+  --tooltip-border: #00B4D8;
+
+  --font-size: x-small;
+}
+
+body {
+  background-color: var(--background);
+  color: var(--primary-text);
+  font-family: Arial, sans-serif;
+}
+
+button {
+  background-color: var(--button-default);
+  color: var(--primary-text);
+  border: none;
+  padding: 8px 16px;
+  cursor: pointer;
+}
+
+button:hover {
+  background-color: var(--button-hover);
+}
+
+button:active {
+  background-color: var(--button-active);
+}
+
+button:disabled {
+  background-color: var(--button-disabled);
+  cursor: not-allowed;
+}
+
+input {
+  background-color: var(--input-background);
+  border: 1px solid var(--input-border);
+  color: var(--input-text);
+  padding: 8px;
+}
+
+.sidebar {
+  background-color: var(--sidebar-background);
+  border-right: 1px solid var(--sidebar-border);
+}
+
+.tooltip {
+  background-color: var(--tooltip-background);
+  color: var(--tooltip-text);
+  border: 1px solid var(--tooltip-border);
+  padding: 8px;
+}
