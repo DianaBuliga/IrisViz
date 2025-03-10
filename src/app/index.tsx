@@ -1,15 +1,7 @@
 import React from 'react';
 import ReactDOM from 'react-dom/client';
-import TopMenu from "./layout/TopMenu";
 import "./global.scss";
-
-const App = () => {
-	return (
-		<>
-			<TopMenu/>
-		</>
-	);
-};
+import App from "./App";
 
 const rootElement = document.getElementById('root');
 

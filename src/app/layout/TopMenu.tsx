@@ -17,6 +17,7 @@ const TopMenu = () => {
 		setAnchorEl(event.currentTarget);
 		setOpenMenu(menuItem);
 	};
+	
 	const handleClose = () => {
 		setAnchorEl(null);
 		setOpenMenu(null);
