@@ -1,22 +1,30 @@
-const {app, BrowserWindow} = require('electron/main')
-const path = require('path')
+import {app, BrowserWindow} from 'electron';
+import path from 'path';
+import electronDebug from 'electron-debug';
 
-const isDev = process.env.NODE_ENV !== 'development';
+electronDebug({showDevTools: true});
+
+const isDev = process.env.NODE_ENV === 'development';
 
 const createWindow = () => {
 	const mainWindow = new BrowserWindow({
 		width: 800,
 		height: 600,
+		frame: false,
+		autoHideMenuBar: true,
 		webPreferences: {
-			nodeIntegration: true,
-			contextIsolation: false,
+			nodeIntegration: true
 		}
 	})
-	mainWindow.setMenuBarVisibility(null);
+	mainWindow.setMenuBarVisibility(false);
 	
-	const indexPath = path.resolve(__dirname, '../app/index.html');
-	mainWindow.loadFile(indexPath);
-	mainWindow.webContents.openDevTools(); // Open DevTools for debugging
+	const indexPath = path.join(__dirname, '../app/index.html');
+	if (isDev) {
+		mainWindow.loadURL('http://localhost:3000');
+	} else {
+		const indexPath = path.join(__dirname, '../app/index.html');
+		mainWindow.loadFile(indexPath);
+	}
 }
 
 app.whenReady().then(() => {
