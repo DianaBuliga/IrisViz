@@ -1,0 +1,99 @@
+.css-1uent87-MuiButtonBase-root-MuiButton-root {
+  color: var(--secondary-text) !important;
+}
+
+.topMenu {
+  display: inline-flex !important;
+  -webkit-app-region: drag;
+  user-select: none;
+}
+
+.appBox {
+  display: inline-flex;
+  background-color: var(--input-background);
+  height: 2rem;
+  right: auto;
+  justify-content: space-between;
+}
+
+.appBox div {
+  display: inline-flex;
+  -webkit-app-region: no-drag;
+}
+
+.css-1uent87-MuiButtonBase-root-MuiButton-root {
+  font-size: var(--font-size) !important;
+  border-radius: 0 !important;
+}
+
+.MenuButton {
+  height: 2rem;
+  padding: 0.1rem;
+}
+
+.MenuButton:hover {
+  background-color: var(--dropdown-hover) !important;
+}
+
+.css-1toxriw-MuiList-root-MuiMenu-list {
+  background-color: var(--sidebar-header);
+  color: var(--secondary-text);
+  min-width: 12rem;
+  width: fit-content;
+}
+
+.css-1rju2q6-MuiButtonBase-root-MuiMenuItem-root {
+  font-size: var(--font-size) !important;
+}
+
+.css-1rju2q6-MuiButtonBase-root-MuiMenuItem-root:hover {
+  background-color: var(--disabled-text) !important;
+}
+
+.css-1tktgsa-MuiPaper-root-MuiPopover-paper-MuiMenu-paper {
+  border-radius: 0 !important;
+}
+
+.css-1toxriw-MuiList-root-MuiMenu-list {
+  padding-top: 0 !important;
+  padding-bottom: 0 !important;
+}
+
+// mui list li
+.css-1rju2q6-MuiButtonBase-root-MuiMenuItem-root {
+  min-height: 1px !important;
+  min-width: 6rem;
+  justify-content: space-between !important;
+}
+
+.MenuItem {
+  display: inline-flex;
+}
+
+.css-7ctihp-MuiTypography-root {
+  font-size: var(--font-size) !important;
+}
+
+.actionButtons svg {
+  color: var(--secondary-text) !important;
+}
+
+.icon {
+  height: 1.7rem !important;
+  font-size: 1.2rem !important;
+  padding: 0.1rem !important;
+  padding-left: 0.4rem !important;
+  padding-right: 0.4rem !important;
+}
+
+.icon-middle {
+  font-size: 1rem !important;
+}
+
+.icon:hover {
+  background-color: var(--dropdown-hover);
+}
+
+.icon-right:hover {
+  background-color: var(--secondary-accent);
+}

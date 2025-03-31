@@ -1,5 +1,6 @@
 const path = require('path');
 const HtmlWebpackPlugin = require('html-webpack-plugin');
+const CopyPlugin = require("copy-webpack-plugin");
 
 module.exports = {
 	mode: 'development',
@@ -7,7 +8,10 @@ module.exports = {
 	output: {
 		filename: 'bundle.js',
 		path: path.resolve(__dirname, 'dist/app'),
-		publicPath: '/', // Required for dev server
+		publicPath: '/',
+	},
+	externals: {
+		electron: "require('electron')",
 	},
 	module: {
 		rules: [
@@ -25,18 +29,25 @@ module.exports = {
 		],
 	},
 	resolve: {
+		fallback: {
+			fs: false,
+			path: require.resolve("path-browserify"),
+		},
 		extensions: ['.ts', '.tsx', '.js'],
 	},
 	plugins: [
 		new HtmlWebpackPlugin({
 			template: 'src/app/index.html',
 		}),
+		new CopyPlugin({
+			patterns: [{from: "src/preload.js", to: "../electron/preload.js"}],
+		}),
 	],
 	devServer: {
-		static: path.join(__dirname, 'dist/app'), // Serve from the output directory
+		static: path.join(__dirname, 'dist/app'),
 		compress: true,
-		port: 3000, // Change port if needed
+		port: 3000,
 		hot: true,
-		historyApiFallback: true, // Ensures proper routing for SPAs
+		historyApiFallback: true,
 	},
 };

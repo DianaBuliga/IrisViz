@@ -29,6 +29,7 @@
 		"autoprefixer": "^10.4.20",
 		"babel-loader": "^10.0.0",
 		"concurrently": "^9.1.2",
+		"copy-webpack-plugin": "^13.0.0",
 		"copyfiles": "^2.4.1",
 		"css-loader": "^7.1.2",
 		"electron": "^35.0.2",
@@ -44,6 +45,7 @@
 		"react-dom": "^19.0.0",
 		"react-refresh": "^0.16.0",
 		"react-scripts": "^5.0.1",
+		"react-split": "^2.0.14",
 		"sass-loader": "^16.0.5",
 		"style-loader": "^4.0.0",
 		"ts-loader": "^9.5.2",
@@ -54,14 +56,20 @@
 		"webpack-cli": "^6.0.1",
 		"webpack-dev-middleware": "^7.4.2",
 		"webpack-dev-server": "^5.2.1",
-		"webpack-hot-middleware": "^2.26.1"
+		"webpack-hot-middleware": "^2.26.1",
+		"zustand": "^4.5.6"
 	},
 	"dependencies": {
 		"@emotion/react": "^11.14.0",
 		"@emotion/styled": "^11.14.0",
 		"@mui/icons-material": "^6.4.7",
 		"@mui/material": "^6.4.7",
+		"@mui/x-charts": "^7.28.0",
+		"crypto-browserify": "^3.12.1",
 		"honeycomb-web-toolkit": "github:red-gate/honeycomb-web-toolkit",
+		"stream-browserify": "^3.0.0",
+		"url": "^0.11.4",
+		"uuid": "^11.1.0",
 		"webpack-node-externals": "^3.0.0"
 	}
 }
