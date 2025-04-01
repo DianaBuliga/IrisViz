@@ -1,5 +1,5 @@
 .css-1uent87-MuiButtonBase-root-MuiButton-root {
-  color: var(--secondary-text) !important;
+  color: var(--primary-text) !important;
 }
 
 .topMenu {
@@ -37,7 +37,7 @@
 
 .css-1toxriw-MuiList-root-MuiMenu-list {
   background-color: var(--sidebar-header);
-  color: var(--secondary-text);
+  color: var(--primary-text);
   min-width: 12rem;
   width: fit-content;
 }
@@ -75,7 +75,7 @@
 }
 
 .actionButtons svg {
-  color: var(--secondary-text) !important;
+  color: var(--svg-color-primary) !important;
 }
 
 .icon {

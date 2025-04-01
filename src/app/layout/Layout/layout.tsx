@@ -1,57 +1,82 @@
-// Layout.tsx
-import React from 'react';
+import React, {useState} from 'react';
 import {IconButton} from '@mui/material';
+import CloseIcon from '@mui/icons-material/Close';
+
 import useTabStore from './layoutStore';
 import LeftMenu from "../LeftMenu/leftMenu"; // Import the Zustand store
+import './layout.scss';
+import Footer from "../Footer/footer";
 
 const Layout = () => {
-	const {tabs, activeTab, addTab, removeTab, setActiveTab} = useTabStore();
+	const {panels, removeTab, setActiveTab, reorderTabs, addPanel, removePanel, setLastClickedPanel} = useTabStore();
+	const [draggedOverIndex, setDraggedOverIndex] = useState<number | null>(null); // State to track the hovered tab index
+	
+	const handleDragStart = (e: React.DragEvent<HTMLDivElement>, panelId: string, index: number) => {
+		e.dataTransfer.setData('tabIndex', index.toString());
+		e.dataTransfer.setData('panelId', panelId);
+		(e.target as HTMLDivElement).style.opacity = '0.5';
+	};
+	
+	const handleDragOver = (e: React.DragEvent<HTMLDivElement>, index: number) => {
+		e.preventDefault();
+		setDraggedOverIndex(index);
+	};
+	
+	const handleDrop = (e: React.DragEvent<HTMLDivElement>, panelId: string, index: number) => {
+		e.preventDefault();
+		const draggedIndex = parseInt(e.dataTransfer.getData('tabIndex'), 10);
+		const draggedPanelId = e.dataTransfer.getData('panelId');
+		if (draggedPanelId !== panelId) {
+		} else if (draggedIndex !== index) {
+			reorderTabs(panelId, draggedIndex, index);
+		}
+		setDraggedOverIndex(null);
+	};
+	
+	const handleDragEnd = (e: React.DragEvent<HTMLDivElement>) => {
+		(e.target as HTMLDivElement).style.opacity = '1';
+		setDraggedOverIndex(null);
+	};
 	
 	return (
 		<>
 			<LeftMenu/>
-			<div style={{marginLeft: '3rem', display: 'flex', flexDirection: 'column', marginTop: '2.2rem'}}>
-				{/* Tab Header */}
-				<div style={{
-					display: 'flex',
-					padding: '5px',
-					backgroundColor: '#f0f0f0',
-					borderBottom: '1px solid #ccc'
-				}}>
-					{tabs.map((tab: {
-						id: React.Key | null | undefined;
-						icon: string | number | bigint | boolean | React.ReactElement<unknown, string | React.JSXElementConstructor<any>> | Iterable<React.ReactNode> | React.ReactPortal | Promise<string | number | bigint | boolean | React.ReactPortal | React.ReactElement<unknown, string | React.JSXElementConstructor<any>> | Iterable<React.ReactNode> | null | undefined> | null | undefined;
-						title: string | number | bigint | boolean | React.ReactElement<unknown, string | React.JSXElementConstructor<any>> | Iterable<React.ReactNode> | React.ReactPortal | Promise<string | number | bigint | boolean | React.ReactPortal | React.ReactElement<unknown, string | React.JSXElementConstructor<any>> | Iterable<React.ReactNode> | null | undefined> | null | undefined;
-					}) => (
-						<div
-							key={tab.id}
-							onClick={() => setActiveTab(tab.id)}
-							style={{
-								display: 'flex',
-								alignItems: 'center',
-								padding: '5px 15px',
-								cursor: 'pointer',
-								backgroundColor: activeTab === tab.id ? '#ddd' : 'transparent',
-								borderRadius: '5px',
-								marginRight: '10px',
-							}}
-						>
-							{tab.icon}
-							<span style={{marginLeft: '8px'}}>{tab.title}</span>
-							<IconButton size="small" onClick={() => removeTab(tab.id)} style={{marginLeft: '5px'}}>
-								<svg xmlns="http://www.w3.org/2000/svg" height="16" viewBox="0 96 960 960" width="16">
-									<path d="M536 832L832 536 536 240 240 536 536 832Z"/>
-								</svg>
-							</IconButton>
+			<div className="layout">
+				<div className="panels">
+					{panels.map((panel) => (
+						<div key={panel.id} className="panel">
+							<div className="tabHeader">
+								{panel.tabs.map((tab, index) => (
+									<div
+										key={tab.id}
+										draggable
+										onDragStart={(e) => handleDragStart(e, panel.id, index)}
+										onDragOver={(e) => handleDragOver(e, index)}
+										onDrop={(e) => handleDrop(e, panel.id, index)}
+										onDragEnd={handleDragEnd}
+										onClick={() => {
+											setActiveTab(panel.id, tab.id);
+											setLastClickedPanel(panel.id);
+										}}
+										className={`headerComponent ${panel.activeTab === tab.id ? 'active' : ''}`}
+										style={{borderBottom: panel.activeTab === tab.id ? '3px solid var(--third-accent)' : 'none'}}
+									>
+										<span className="tabIcon">{tab.icon}</span>
+										<span className="tabTitle">{tab.title}</span>
+										<IconButton className="tabClose" onClick={() => removeTab(panel.id, tab.id)}>
+											<CloseIcon/>
+										</IconButton>
+									</div>
+								))}
+							</div>
+							<div className="tabComponent">
+								<div>{panel.tabs.find((tab) => tab.id === panel.activeTab)?.component}</div>
+							</div>
 						</div>
 					))}
 				</div>
-				{/* Right Panel - Dynamically render selected tab component */}
-				<div style={{border: '1px solid #ccc', padding: '10px', flex: 1}}>
-					<div>{tabs.find((tab: { id: any; }) => tab.id === activeTab)?.component}</div>
-				</div>
-			
 			</div>
+			<Footer/>
 		</>
 	);
 };

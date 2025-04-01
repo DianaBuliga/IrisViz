@@ -1,6 +1,7 @@
 import {app, BrowserWindow} from 'electron';
 import path from 'path';
 import electronDebug from 'electron-debug';
+import installExtension, {REACT_DEVELOPER_TOOLS} from "electron-devtools-installer";
 
 const {ipcMain} = require('electron')
 
@@ -26,6 +27,9 @@ const createWindow = () => {
 	const indexPath = path.join(__dirname, '../app/index.html');
 	if (isDev) {
 		mainWindow.loadURL('http://localhost:3000');
+		installExtension(REACT_DEVELOPER_TOOLS)
+			.then((name) => console.log(`Added Extension:  ${name}`))
+			.catch((err) => console.log("An error occurred: ", err));
 	} else {
 		mainWindow.loadFile(indexPath);
 	}

@@ -66,6 +66,7 @@
 		"@mui/material": "^6.4.7",
 		"@mui/x-charts": "^7.28.0",
 		"crypto-browserify": "^3.12.1",
+		"electron-devtools-installer": "^4.0.0",
 		"honeycomb-web-toolkit": "github:red-gate/honeycomb-web-toolkit",
 		"stream-browserify": "^3.0.0",
 		"url": "^0.11.4",

@@ -8,14 +8,14 @@ import useTabStore from "../Layout/layoutStore";
 
 const LeftMenu = () => {
 	
-	const {addTab} = useTabStore();
-	
+	const {addTab, lastClickedPanel} = useTabStore();
 	
 	return (
 		<List className="leftMenu">
 			{components.map((item, index) => (
-				<ListItem key={index}>
-					<ListItemIcon onClick={() => addTab(item.title, item.icon, item.component)}>
+				<ListItem key={index} className='listItem'
+				          onClick={() => addTab(lastClickedPanel, item.title, item.icon, item.component)}>
+					<ListItemIcon>
 						{item.icon}
 					</ListItemIcon>
 				</ListItem>
