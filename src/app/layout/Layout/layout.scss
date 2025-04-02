@@ -1,11 +1,65 @@
 .layout {
+  display: flex;
+  flex-wrap: wrap;
   margin-left: 41px;
   margin-top: 2.1rem;
+  height: calc(100vh - 3rem);
+  width: calc(100vw - 3rem);
+}
+
+.panel {
+  flex: 1;
+  display: flex;
+  flex-direction: column;
+  border: 1px solid #ccc;
+}
+
+.panel.horizontal {
+  flex-direction: row; /* For horizontal splits */
+}
+
+.split-container {
+  display: flex;
+  flex-direction: column; /* Default, may need to switch to row for horizontal split */
+}
+
+.tab.active {
+  background: lightblue;
+}
+
+.content {
+  flex-grow: 1;
+  padding: 10px;
+}
+
+.panel.horizontal {
+  flex-direction: row;
+}
+
+.panel.vertical {
+  flex-direction: column;
+}
+
+.split-buttons {
+  display: flex;
+  gap: 5px;
+  padding: 5px;
+}
+
+.headerComponent.dragging {
+  opacity: 0.5;
+}
+
+.panel.draggingOver {
+  border: 2px dashed #007aff;
 }
 
 .tabHeader {
   display: flex;
   height: 1.8rem;
+  flex-direction: row;
+  padding: 10px;
+  background: #ddd;
 }
 
 .headerComponent {
@@ -13,11 +67,6 @@
   border-radius: 3px;
   border-bottom: none;
   cursor: pointer;
-
-  &.dragOver {
-	border: 2px dashed #ccc; /* Add a dashed border for the hover state */
-	background-color: rgba(0, 0, 0, 0.1); /* Optional background highlight */
-  }
 }
 
 .tabIcon {

@@ -68,6 +68,8 @@
 		"crypto-browserify": "^3.12.1",
 		"electron-devtools-installer": "^4.0.0",
 		"honeycomb-web-toolkit": "github:red-gate/honeycomb-web-toolkit",
+		"react-dnd": "^16.0.1",
+		"react-dnd-html5-backend": "^16.0.1",
 		"stream-browserify": "^3.0.0",
 		"url": "^0.11.4",
 		"uuid": "^11.1.0",

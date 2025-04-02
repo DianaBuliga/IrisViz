@@ -1,4 +1,8 @@
 import React, {useState} from "react";
+
+import {DndProvider} from "react-dnd";
+import {HTML5Backend} from "react-dnd-html5-backend";
+
 import TopMenu from "./layout/TopMenu/topMenu";
 import Layout from "./layout/Layout/layout";
 
@@ -15,7 +19,9 @@ const App = () => {
 		<>
 			<TopMenu/>
 			
-			<Layout/>
+			<DndProvider backend={HTML5Backend}>
+				<Layout/>
+			</DndProvider>
 		
 		</>
 	);
