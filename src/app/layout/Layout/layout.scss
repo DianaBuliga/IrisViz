@@ -2,42 +2,24 @@
   display: flex;
   flex-wrap: wrap;
   margin-left: 41px;
-  margin-top: 2.1rem;
+  margin-top: 1.5rem;
   height: calc(100vh - 3rem);
   width: calc(100vw - 3rem);
 }
 
 .panel {
-  flex: 1;
   display: flex;
   flex-direction: column;
-  border: 1px solid #ccc;
+  height: 100%;
+  border: 1px solid white;
 }
 
-.panel.horizontal {
-  flex-direction: row; /* For horizontal splits */
-}
-
-.split-container {
-  display: flex;
-  flex-direction: column; /* Default, may need to switch to row for horizontal split */
+.panel > .panel {
+  flex-grow: 1;
 }
 
 .tab.active {
   background: lightblue;
-}
-
-.content {
-  flex-grow: 1;
-  padding: 10px;
-}
-
-.panel.horizontal {
-  flex-direction: row;
-}
-
-.panel.vertical {
-  flex-direction: column;
 }
 
 .split-buttons {

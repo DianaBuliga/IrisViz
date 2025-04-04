@@ -7,14 +7,17 @@ import CloseIcon from "@mui/icons-material/Close";
 type TabComponentProps = {
 	tab: Tab,
 	panel: Panel,
-	handlePanelClick: (panelId: string, tabId?: string) => void,
 }
 
-const TabComponent = ({tab, panel, handlePanelClick}: TabComponentProps) => {
+const TabComponent = ({tab, panel}: TabComponentProps) => {
 	
 	const tabRef = useRef<HTMLDivElement | null>(null);
 	
-	const {removeTab} = useTabStore();
+	const {removeTab, setActiveTab} = useTabStore();
+	
+	const handleTabClick = (panelId: string, tabId: string) => {
+		setActiveTab(panelId, tabId);
+	}
 	
 	const [, drag] = useDrag({
 		type: 'TAB',
@@ -27,7 +30,7 @@ const TabComponent = ({tab, panel, handlePanelClick}: TabComponentProps) => {
 		<div
 			ref={tabRef}
 			className={`tab ${panel.activeTab === tab.id ? 'active' : ''}`}
-			onClick={() => handlePanelClick(panel.id, tab.id)}
+			onClick={() => handleTabClick(panel.id, tab.id)}
 		>
 			{tab.title}
 			<IconButton onClick={() => removeTab(panel.id, tab.id)}>

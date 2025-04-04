@@ -23,7 +23,7 @@ type TabStore = {
 	addTab: (panelId: string, title: string, icon: React.ReactNode, component: JSX.Element) => void;
 	removeTab: (panelId: string, tabId: string) => void;
 	setActiveTab: (panelId: string, tabId: string) => void;
-	moveTab: (sourcePanelId: string, targetPanelId: string, tabId: string, shouldSplit: boolean, splitType: 'horizontal' | 'vertical') => void;
+	moveTab: (sourcePanelId: string, targetPanelId: string, tabId: string) => void;
 	splitPanel: (panelId: string, splitType: 'horizontal' | 'vertical', tabId: string) => void;
 	setCurrentPanel: (panelId: string) => void;
 };
@@ -48,58 +48,122 @@ const useTabStore = create<TabStore>((set) => ({
 	},
 	
 	removeTab: (panelId, tabId) => {
-		set((state) => ({
-			panels: state.panels.map((panel) =>
-				panel.id === panelId
-					? {...panel, tabs: panel.tabs.filter((tab) => tab.id !== tabId)}
-					: panel
-			),
-		}));
+		set((state) => {
+			const updatedPanels = [...state.panels];
+			
+			// Helper to remove a panel by ID recursively
+			const removeEmptyPanels = (panels: Panel[]): Panel[] => {
+				return panels
+					.map(panel => {
+						if (panel.id === panelId) {
+							const filteredTabs = panel.tabs.filter(tab => tab.id !== tabId);
+							const isEmpty = filteredTabs.length === 0 && (!panel.children || panel.children.length === 0);
+							return isEmpty ? null : {...panel, tabs: filteredTabs};
+						}
+						if (panel.children) {
+							const newChildren = removeEmptyPanels(panel.children).filter(Boolean) as Panel[];
+							return {...panel, children: newChildren};
+						}
+						return panel;
+					})
+					.filter(Boolean) as Panel[];
+			};
+			
+			const cleanedPanels = removeEmptyPanels(updatedPanels);
+			
+			const newCurrent = cleanedPanels.length > 0 ? cleanedPanels[0].id : "";
+			
+			return {
+				panels: cleanedPanels,
+				currentPanel: state.currentPanel === panelId ? newCurrent : state.currentPanel,
+			};
+		});
 	},
 	
 	setActiveTab: (panelId, tabId) => {
-		set((state) => ({
-			panels: state.panels.map((panel) =>
-				panel.id === panelId ? {...panel, activeTab: tabId} : panel
-			),
-		}));
+		set((state) => {
+			const updateActiveTab = (panels: Panel[]): Panel[] =>
+				panels.map((panel) => {
+					if (panel.id === panelId) {
+						return {...panel, activeTab: tabId};
+					}
+					if (panel.children) {
+						return {...panel, children: updateActiveTab(panel.children)};
+					}
+					return panel;
+				});
+			
+			return {panels: updateActiveTab(state.panels)};
+		});
 	},
 	
-	moveTab: (fromPanelId, toPanelId, tabId, shouldSplit = false, splitType = 'horizontal') =>
+	moveTab: (fromPanelId, toPanelId, tabId) =>
 		set((state) => {
 			let tabToMove: Tab | undefined;
-			let newPanels = state.panels.map((panel) => {
-				if (panel.id === fromPanelId) {
-					const tab = panel.tabs.find((t) => t.id === tabId);
-					if (tab) tabToMove = tab;
-					return {...panel, tabs: panel.tabs.filter((t) => t.id !== tabId)};
-				}
-				return panel;
-			});
 			
-			if (tabToMove) {
-				if (shouldSplit) {
-					// Create a new panel for the tab
-					const newPanel: Panel = {
-						id: uuidv4(), // Unique ID
-						tabs: [tabToMove],
-						splitType: splitType, // or "vertical"
-						activeTab: tabToMove.id,
-						children: [],
-					};
-					newPanels.push(newPanel);
-				} else {
-					// Move the tab to the existing panel
-					newPanels = newPanels.map((panel) =>
-						panel.id === toPanelId ? {...panel, tabs: [...panel.tabs, tabToMove!]} : panel
-					);
-				}
-			}
+			const updatePanels = (panels: Panel[]): Panel[] =>
+				panels.map(panel => {
+					// Remove tab from source panel
+					if (panel.id === fromPanelId) {
+						const filteredTabs = panel.tabs.filter(tab => {
+							if (tab.id === tabId) {
+								tabToMove = tab;
+								return false;
+							}
+							return true;
+						});
+						return {...panel, tabs: filteredTabs};
+					}
+					
+					// Traverse children if exist
+					if (panel.children) {
+						return {
+							...panel,
+							children: updatePanels(panel.children),
+						};
+					}
+					
+					return panel;
+				});
+			
+			const addTabToTarget = (panels: Panel[]): Panel[] =>
+				panels.map(panel => {
+					if (panel.id === toPanelId && tabToMove) {
+						return {
+							...panel,
+							tabs: [...panel.tabs, tabToMove],
+							activeTab: tabToMove.id,
+						};
+					}
+					if (panel.children) {
+						return {
+							...panel,
+							children: addTabToTarget(panel.children),
+						};
+					}
+					return panel;
+				});
+			
+			let newPanels = updatePanels(state.panels);
+			newPanels = addTabToTarget(newPanels);
 			
 			return {panels: newPanels};
 		}),
 	setCurrentPanel: (panelId: string) => {
-		set(() => ({currentPanel: panelId}));
+		set((state) => {
+			const panelExists = (panels: Panel[]): boolean =>
+				panels.some(
+					(panel) =>
+						panel.id === panelId ||
+						(panel.children && panelExists(panel.children))
+				);
+			
+			if (panelExists(state.panels)) {
+				return {currentPanel: panelId};
+			}
+			
+			return {}; // panel doesn't exist
+		});
 	},
 	splitPanel: (panelId, splitType, tabId) => {
 		set((state) => {
@@ -109,20 +173,33 @@ const useTabStore = create<TabStore>((set) => ({
 			const tab = panel.tabs.find((t) => t.id === tabId);
 			if (!tab) return state;
 			
-			return {
-				panels: state.panels.map((p) =>
+			let newPanels = state.panels.map((panel) => {
+				if (panel.id === panelId) {
+					return {...panel, tabs: panel.tabs.filter((t) => t.id !== tabId)};
+				}
+				return panel;
+			});
+			
+			const newPanel: Panel = {
+				id: uuidv4(),
+				tabs: [tab],
+				splitType: splitType,
+				activeTab: tabId,
+				children: [],
+			};
+			if (splitType === "horizontal") {
+				newPanels = newPanels.map((p) =>
 					p.id === panelId
 						? {
 							...p,
-							splitType,
-							children: [
-								{...p, children: undefined, splitType: splitType},
-								{id: uuidv4(), activeTab: tab.id, tabs: [tab]},
-							],
+							children: [...(p.children || []), newPanel], // Add the new panel to the children array
 						}
 						: p
-				),
-			};
+				);
+			} else {
+				newPanels.push(newPanel);
+			}
+			return {panels: newPanels};
 		});
 	},
 }));
