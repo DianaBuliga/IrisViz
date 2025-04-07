@@ -28,58 +28,107 @@ type TabStore = {
 	setCurrentPanel: (panelId: string) => void;
 };
 
+const cleanEmptyPanels = (panels: Panel[]): Panel[] => {
+	return panels
+		.map(panel => {
+			if (panel.children) {
+				const cleanedChildren = cleanEmptyPanels(panel.children);
+				if (panel.tabs.length === 0 && cleanedChildren.length === 0) {
+					return null;
+				}
+				return {...panel, children: cleanedChildren};
+			}
+			return panel.tabs.length === 0 ? null : panel;
+		})
+		.filter(Boolean) as Panel[];
+};
+
+const findPanelWithTab = (panels: Panel[], tabId: string): string | null => {
+	for (const panel of panels) {
+		if (panel.tabs.some(t => t.id === tabId)) return panel.id;
+		if (panel.children) {
+			const found = findPanelWithTab(panel.children, tabId);
+			if (found) return found;
+		}
+	}
+	return null;
+};
+
 const firstId = uuidv4();
 
 const useTabStore = create<TabStore>((set) => ({
 	panels: [{id: firstId, activeTab: '', tabs: []}],
 	currentPanel: firstId,
 	addTab: (panelId, title, icon, component) => {
-		set((state) => ({
-			panels: state.panels.map((panel) =>
-				panel.id === panelId
-					? {
-						...panel,
-						tabs: [...panel.tabs, {id: uuidv4(), title, icon, component}],
-						activeTab: panel.tabs.length ? panel.tabs[0].id : '',
-					}
-					: panel
-			),
-		}));
-	},
-	
-	removeTab: (panelId, tabId) => {
 		set((state) => {
-			const updatedPanels = [...state.panels];
-			
-			// Helper to remove a panel by ID recursively
-			const removeEmptyPanels = (panels: Panel[]): Panel[] => {
-				return panels
-					.map(panel => {
-						if (panel.id === panelId) {
-							const filteredTabs = panel.tabs.filter(tab => tab.id !== tabId);
-							const isEmpty = filteredTabs.length === 0 && (!panel.children || panel.children.length === 0);
-							return isEmpty ? null : {...panel, tabs: filteredTabs};
-						}
-						if (panel.children) {
-							const newChildren = removeEmptyPanels(panel.children).filter(Boolean) as Panel[];
-							return {...panel, children: newChildren};
-						}
-						return panel;
-					})
-					.filter(Boolean) as Panel[];
+			const newTab: Tab = {
+				id: uuidv4(),
+				title,
+				icon,
+				component,
 			};
 			
-			const cleanedPanels = removeEmptyPanels(updatedPanels);
-			
-			const newCurrent = cleanedPanels.length > 0 ? cleanedPanels[0].id : "";
+			const addTabToPanel = (panels: Panel[]): Panel[] =>
+				panels.map((panel) => {
+					if (panel.id === panelId) {
+						return {
+							...panel,
+							tabs: [...panel.tabs, newTab],
+							activeTab: newTab.id,
+						};
+					}
+					if (panel.children) {
+						return {
+							...panel,
+							children: addTabToPanel(panel.children),
+						};
+					}
+					return panel;
+				});
 			
 			return {
-				panels: cleanedPanels,
-				currentPanel: state.currentPanel === panelId ? newCurrent : state.currentPanel,
+				panels: addTabToPanel(state.panels),
+				currentPanel: panelId,
 			};
 		});
 	},
 	
+	removeTab: (panelId, tabId) => {
+		set((state) => {
+			// Step 1: Actually remove the tab from the panels
+			const removeTabFromPanels = (panels: Panel[]): Panel[] => {
+				return panels.map(panel => {
+					if (panel.id === panelId) {
+						const filteredTabs = panel.tabs.filter(tab => tab.id !== tabId);
+						return {
+							...panel,
+							tabs: filteredTabs,
+							activeTab: filteredTabs.at(-1)?.id || '',
+						};
+					}
+					if (panel.children) {
+						return {
+							...panel,
+							children: removeTabFromPanels(panel.children),
+						};
+					}
+					return panel;
+				});
+			};
+			
+			const updatedPanels = removeTabFromPanels(state.panels);
+			
+			// Step 2: Clean empty panels after removing the tab
+			const cleanedPanels = cleanEmptyPanels(updatedPanels);
+			
+			const panelStillExists = cleanedPanels.some(p => p.id === state.currentPanel || p.children?.some(c => c.id === state.currentPanel));
+			
+			return {
+				panels: cleanedPanels,
+				currentPanel: panelStillExists ? state.currentPanel : (cleanedPanels[0]?.id || ''),
+			};
+		});
+	},
 	setActiveTab: (panelId, tabId) => {
 		set((state) => {
 			const updateActiveTab = (panels: Panel[]): Panel[] =>
@@ -165,43 +214,104 @@ const useTabStore = create<TabStore>((set) => ({
 			return {}; // panel doesn't exist
 		});
 	},
-	splitPanel: (panelId, splitType, tabId) => {
+	splitPanel: (targetPanelId, splitType, tabId) => {
 		set((state) => {
-			const panel = state.panels.find((p) => p.id === panelId);
-			if (!panel) return state;
+			let tabToMove: Tab | null = null;
 			
-			const tab = panel.tabs.find((t) => t.id === tabId);
-			if (!tab) return state;
-			
-			let newPanels = state.panels.map((panel) => {
-				if (panel.id === panelId) {
-					return {...panel, tabs: panel.tabs.filter((t) => t.id !== tabId)};
-				}
-				return panel;
-			});
-			
-			const newPanel: Panel = {
-				id: uuidv4(),
-				tabs: [tab],
-				splitType: splitType,
-				activeTab: tabId,
-				children: [],
+			// Step 1: Remove the tab from its source panel
+			const removeTab = (panels: Panel[]): Panel[] => {
+				return panels.map(panel => {
+					if (panel.tabs.some(t => t.id === tabId)) {
+						const filtered = panel.tabs.filter(t => {
+							if (t.id === tabId) {
+								tabToMove = t;
+								return false;
+							}
+							return true;
+						});
+						return {
+							...panel,
+							tabs: filtered,
+							activeTab: filtered.at(-1)?.id || '',
+						};
+					}
+					
+					if (panel.children) {
+						return {
+							...panel,
+							children: removeTab(panel.children),
+						};
+					}
+					return panel;
+				});
 			};
-			if (splitType === "horizontal") {
-				newPanels = newPanels.map((p) =>
-					p.id === panelId
-						? {
-							...p,
-							children: [...(p.children || []), newPanel], // Add the new panel to the children array
+			
+			// Step 2: Replace the target panel with a group of two new panels
+			const splitInPlace = (panels: Panel[]): Panel[] => {
+				return panels.map(panel => {
+					if (panel.id === targetPanelId && tabToMove) {
+						const originalTabs = panel.tabs;
+						
+						const child1: Panel = {
+							id: uuidv4(),
+							tabs: originalTabs,
+							activeTab: originalTabs.at(-1)?.id || '',
+						};
+						
+						const child2: Panel = {
+							id: uuidv4(),
+							tabs: [tabToMove],
+							activeTab: tabToMove.id,
+						};
+						
+						return {
+							id: uuidv4(), // this becomes a parent panel now
+							tabs: [],
+							activeTab: '',
+							splitType,
+							children: [child1, child2],
+						};
+					}
+					
+					if (panel.children) {
+						return {
+							...panel,
+							children: splitInPlace(panel.children),
+						};
+					}
+					return panel;
+				});
+			};
+			
+			const cleaned = removeTab(state.panels);
+			const splitPanels = splitInPlace(cleaned);
+			const cleanedPanels = cleanEmptyPanels(splitPanels);
+			
+			let newPanelId = state.currentPanel;
+			if (tabToMove) {
+				const findPanelWithTab = (panels: Panel[]): string | null => {
+					for (const panel of panels) {
+						if (panel.tabs.some(t => t.id === tabToMove!.id)) {
+							return panel.id;
 						}
-						: p
-				);
-			} else {
-				newPanels.push(newPanel);
+						if (panel.children) {
+							const found = findPanelWithTab(panel.children);
+							if (found) return found;
+						}
+					}
+					return null;
+				};
+				newPanelId = findPanelWithTab(cleanedPanels) || newPanelId;
 			}
-			return {panels: newPanels};
+			
+			return {
+				panels: cleanedPanels,
+				currentPanel: newPanelId || state.currentPanel,
+			};
+			
 		});
 	},
+	
 }));
 
 export default useTabStore;
