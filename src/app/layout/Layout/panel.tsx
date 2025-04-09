@@ -80,7 +80,7 @@ const PanelComponent = ({panel}: PanelComponentProps) => {
 	}
 	
 	return (
-		<ResizablePanel defaultSize={100}>
+		<ResizablePanel>
 			{renderSinglePanel()}
 		</ResizablePanel>
 	);

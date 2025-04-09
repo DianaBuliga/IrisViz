@@ -10,11 +10,6 @@ const App = () => {
 	const [charts, setCharts] = useState<number[]>([]);
 	const [idCounter, setIdCounter] = useState(1);
 	
-	const addChart = () => {
-		setCharts([...charts, idCounter]);
-		setIdCounter(idCounter + 1);
-	};
-	
 	return (
 		<>
 			<TopMenu/>
