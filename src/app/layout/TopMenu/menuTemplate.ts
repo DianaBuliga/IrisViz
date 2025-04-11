@@ -5,7 +5,7 @@ const menuItems: { [key: string]: { label: string; action?: () => void; shortcut
 		{
 			label: "New File",
 			action: () => sendMessage(
-				{type: "openFile", payload: "D:\\backend\\videoReaderBackend\\frame0.jpg"}
+				{type: "openFile", payload: "D:\\backend\\videoReaderBackend\\intersection1.mp4"}
 			)
 		},
 		{label: "Open File", action: () => console.log("Open File Clicked")},

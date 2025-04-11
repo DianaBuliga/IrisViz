@@ -27,6 +27,7 @@ const ImageRendererComponent = () => {
 		img.src = `data:image/jpeg;base64,${frame}`;
 		img.onload = () => {
 			ctx.drawImage(img, 0, 0);
+			console.log(img);
 			
 			drawBoundingBoxes(ctx, detections);
 		};
