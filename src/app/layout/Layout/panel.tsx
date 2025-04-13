@@ -66,10 +66,10 @@ const PanelComponent = ({panel}: PanelComponentProps) => {
 		const direction = panel.splitType === "horizontal" ? "horizontal" : "vertical";
 		
 		return (
-			<PanelGroup direction={direction} className="resizable-group">
+			<PanelGroup direction={direction}>
 				{panel.children.map((childPanel, index) => (
 					<React.Fragment key={childPanel.id}>
-						<ResizablePanel defaultSize={100 / (panel.children ? panel.children.length : 10)}>
+						<ResizablePanel defaultSize={50} minSize={20} maxSize={80}>
 							<PanelComponent panel={childPanel}/>
 						</ResizablePanel>
 						{panel.children && index < panel.children.length - 1 && <PanelResizeHandle/>}
@@ -80,9 +80,13 @@ const PanelComponent = ({panel}: PanelComponentProps) => {
 	}
 	
 	return (
-		<ResizablePanel>
-			{renderSinglePanel()}
-		</ResizablePanel>
+		<div>
+			<ResizablePanel>
+				{renderSinglePanel()}
+			</ResizablePanel>
+			<PanelResizeHandle/>
+		
+		</div>
 	);
 };
 

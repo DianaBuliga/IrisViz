@@ -45,7 +45,7 @@ const ImageRendererComponent = () => {
 	
 	return (
 		<div>
-			<canvas ref={canvasRef} width={640} height={480}/>
+			<canvas ref={canvasRef}/>
 		</div>
 	);
 };

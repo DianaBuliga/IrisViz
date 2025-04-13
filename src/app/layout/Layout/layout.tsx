@@ -18,7 +18,9 @@ const Layout = () => {
 					{panels.map((panel) => (
 						<PanelComponent key={panel.id} panel={panel}/>
 					))}
+				
 				</div>
+			
 			</PanelGroup>
 			<Footer/>
 		</>
