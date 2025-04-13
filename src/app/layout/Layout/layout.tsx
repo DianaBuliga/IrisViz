@@ -1,4 +1,3 @@
-// layout.tsx
 import React from 'react';
 import useTabStore from './layoutStore';
 import './layout.scss';
@@ -8,12 +7,12 @@ import PanelComponent from "./panel"
 import {PanelGroup} from 'react-resizable-panels';
 
 const Layout = () => {
-	const {panels, setActiveTab, setCurrentPanel} = useTabStore();
+	const {panels} = useTabStore();
 	
 	return (
 		<>
 			<LeftMenu/>
-			<PanelGroup direction='horizontal'>
+			<PanelGroup direction='horizontal' className="customPanelGroup">
 				<div className="layout">
 					{panels.map((panel) => (
 						<PanelComponent key={panel.id} panel={panel}/>

@@ -1,35 +1,22 @@
 .layout {
-  //display: flex;
-  //flex-wrap: wrap;
   margin-left: 41px;
   margin-top: 1.5rem;
   height: calc(100vh - 3rem);
   width: calc(100vw - 3rem);
 }
 
-.panel {
-  //display: flex;
-  flex-direction: column;
-  height: 97%; /* Ensure it takes up full available height */
-  border: 1px solid white;
-}
-
-//.panel > .panel {
-//  flex-grow: 1; /* Allows child panels to grow and shrink */
-//}
-
-.tabHeader {
-  display: flex;
-  height: 1.8rem;
-  flex-direction: row;
-  padding: 10px;
-  background: #ddd;
-}
-
-
-.panelDiv {
-  width: 100%;
+.customHeight {
   height: 100%;
+}
+
+.panel {
+  flex-direction: column;
+  height: 100%;
+  border: 1px solid var(--border-color);
+}
+
+.panel.draggingOver {
+  border: 2px dashed #007aff;
 }
 
 .panelGroup {
@@ -44,62 +31,58 @@
   flex: 1;
 }
 
-
-.tab.active {
-  background: lightblue;
+.content {
+  overflow: auto;
+  padding: 1rem;
+  border-top: 1px solid #ccc;
 }
 
-.split-buttons {
-  display: flex;
-  gap: 5px;
-  padding: 5px;
+.vertical .resizeHandle {
+  width: 100%;
+  height: 6px;
+  cursor: row-resize;
 }
 
 .headerComponent.dragging {
   opacity: 0.5;
 }
 
-.panel.draggingOver {
-  border: 2px dashed #007aff;
-}
-
-.tabHeader {
-  display: flex;
-  height: 1.8rem;
-  flex-direction: row;
-  padding: 10px;
-  background: #ddd;
-}
-
-.headerComponent {
-  display: inline-flex;
-  border-radius: 3px;
-  border-bottom: none;
-  cursor: pointer;
-}
-
-.tabIcon {
-  margin: auto;
-}
-
 .headerComponent:hover {
   background-color: #f0f0f0;
 }
 
-.tabClose {
-  margin-left: 10px;
-}
-
 .headerComponent:active {
-  opacity: 0.5; /* When the tab is being dragged */
+  opacity: 0.5;
 }
 
 .headerComponent:focus {
   outline: none;
 }
 
-.headerComponent.dragging {
-  opacity: 0.5; /* Optional: when a tab is being dragged */
+.tab {
+  height: 1.5rem;
+  display: flex;
+}
+
+.tab.active {
+  border-bottom: 3px solid var(--button-active);
+}
+
+.tabHeader {
+  display: flex;
+  height: 1.5rem;
+  padding: 5px 5px 2px 5px;
+  background-color: var(--dropdown-background);
+}
+
+.tabTitle {
+  margin: auto auto auto 4px;
+  color: var(--primary-text);
+  font-size: 0.9rem;
+}
+
+.tabIcon {
+  margin: auto;
 }
 
 .tabIcon svg {
@@ -107,12 +90,6 @@
   margin-left: 0.2rem;
   margin-right: 0.2rem;
   color: var(--accent) !important;
-}
-
-.tabTitle {
-  margin: auto auto auto 4px;
-  color: var(--primary-text);
-  font-size: 0.9rem;
 }
 
 .tabClose {

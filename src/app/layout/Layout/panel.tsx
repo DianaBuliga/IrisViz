@@ -11,7 +11,7 @@ type PanelComponentProps = {
 const PanelComponent = ({panel}: PanelComponentProps) => {
 	const panelRef = useRef<HTMLDivElement | null>(null);
 	
-	const {moveTab, splitPanel, setCurrentPanel, panels} = useTabStore();
+	const {moveTab, splitPanel, setCurrentPanel} = useTabStore();
 	
 	const handlePanelClick = (panelId: string) => {
 		setCurrentPanel(panelId);
@@ -24,8 +24,6 @@ const PanelComponent = ({panel}: PanelComponentProps) => {
 			
 			const panelRect = panelRef.current?.getBoundingClientRect();
 			const clientOffset = monitor.getClientOffset();
-			
-			let shouldSplit = true;
 			
 			if (panelRect && clientOffset) {
 				const isOverHeader = clientOffset.y < panelRect.top + 40; // Adjust this value to suit the height of your panel header
@@ -66,10 +64,10 @@ const PanelComponent = ({panel}: PanelComponentProps) => {
 		const direction = panel.splitType === "horizontal" ? "horizontal" : "vertical";
 		
 		return (
-			<PanelGroup direction={direction}>
+			<PanelGroup direction={direction} className="customHeight">
 				{panel.children.map((childPanel, index) => (
 					<React.Fragment key={childPanel.id}>
-						<ResizablePanel defaultSize={50} minSize={20} maxSize={80}>
+						<ResizablePanel defaultSize={20} minSize={10} maxSize={80}>
 							<PanelComponent panel={childPanel}/>
 						</ResizablePanel>
 						{panel.children && index < panel.children.length - 1 && <PanelResizeHandle/>}
@@ -80,8 +78,8 @@ const PanelComponent = ({panel}: PanelComponentProps) => {
 	}
 	
 	return (
-		<div>
-			<ResizablePanel>
+		<div className='customHeight'>
+			<ResizablePanel className="customHeight">
 				{renderSinglePanel()}
 			</ResizablePanel>
 			<PanelResizeHandle/>

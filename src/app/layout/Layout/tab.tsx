@@ -32,8 +32,9 @@ const TabComponent = ({tab, panel}: TabComponentProps) => {
 			className={`tab ${panel.activeTab === tab.id ? 'active' : ''}`}
 			onClick={() => handleTabClick(panel.id, tab.id)}
 		>
-			{tab.title}
-			<IconButton onClick={() => removeTab(panel.id, tab.id)}>
+			<span className="tabIcon">{tab.icon}</span>
+			<span className="tabTitle">{tab.title}</span>
+			<IconButton className='tabClose' onClick={() => removeTab(panel.id, tab.id)}>
 				<CloseIcon/>
 			</IconButton>
 		</div>
