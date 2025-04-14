@@ -13,7 +13,9 @@ const TabComponent = ({tab, panel}: TabComponentProps) => {
 	
 	const tabRef = useRef<HTMLDivElement | null>(null);
 	
-	const {removeTab, setActiveTab} = useTabStore();
+	const {removeTab, setActiveTab, currentPanel} = useTabStore();
+	const isTabFocused = currentPanel === panel.id;
+	const isTabActive = tab.id === panel.activeTab;
 	
 	const handleTabClick = (panelId: string, tabId: string) => {
 		setActiveTab(panelId, tabId);
@@ -29,7 +31,7 @@ const TabComponent = ({tab, panel}: TabComponentProps) => {
 	return (
 		<div
 			ref={tabRef}
-			className={`tab ${panel.activeTab === tab.id ? 'active' : ''}`}
+			className={`tab ${isTabActive ? 'active' : ''} ${isTabFocused && isTabActive ? "focused" : ""}`}
 			onClick={() => handleTabClick(panel.id, tab.id)}
 		>
 			<span className="tabIcon">{tab.icon}</span>

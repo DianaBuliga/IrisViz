@@ -35,7 +35,6 @@ const PanelComponent = ({panel}: PanelComponentProps) => {
 					const isHorizontalMiddle = clientOffset.y > panelRect.top + panelRect.height / 2;
 					const splitType = isHorizontalMiddle ? "vertical" : "horizontal";
 					
-					console.log(splitType);
 					splitPanel(panel.id, splitType, item.tabId);
 				}
 			}

@@ -31,14 +31,22 @@ type TabStore = {
 const cleanEmptyPanels = (panels: Panel[]): Panel[] => {
 	return panels
 		.map(panel => {
-			if (panel.children) {
-				const cleanedChildren = cleanEmptyPanels(panel.children);
-				if (panel.tabs.length === 0 && cleanedChildren.length === 0) {
-					return null;
-				}
-				return {...panel, children: cleanedChildren};
+			let cleanedChildren = panel.children ? cleanEmptyPanels(panel.children) : undefined;
+			
+			// If it's a container with only one child, flatten it
+			if (cleanedChildren && cleanedChildren.length === 1) {
+				return cleanedChildren[0];
 			}
-			return panel.tabs.length === 0 ? null : panel;
+			
+			// Remove empty containers (no tabs, no children)
+			if (panel.tabs.length === 0 && (!cleanedChildren || cleanedChildren.length === 0)) {
+				return null;
+			}
+			
+			return {
+				...panel,
+				children: cleanedChildren,
+			};
 		})
 		.filter(Boolean) as Panel[];
 };
@@ -195,6 +203,7 @@ const useTabStore = create<TabStore>((set) => ({
 			
 			let newPanels = updatePanels(state.panels);
 			newPanels = addTabToTarget(newPanels);
+			newPanels = cleanEmptyPanels(newPanels);
 			
 			return {panels: newPanels};
 		}),
