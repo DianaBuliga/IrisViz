@@ -22,13 +22,21 @@ const ImageRendererComponent = () => {
 		setDetections(data.objects);
 	};
 	
-	const drawFrame = (ctx: CanvasRenderingContext2D, frame: string, detections: any[]) => {
+	const drawFrame = (canvas: HTMLCanvasElement, frame: string, detections: any[]) => {
 		const img = new Image();
+		const ctx = canvas.getContext("2d");
+		
+		if (!ctx) return;
+		
 		img.src = `data:image/jpeg;base64,${frame}`;
 		img.onload = () => {
-			ctx.drawImage(img, 0, 0);
-			console.log(img);
+			console.log(img.width, img.height);
+			canvas.width = img.width / 10;
+			canvas.height = img.height / 10;
 			
+			ctx.clearRect(0, 0, canvas.width, canvas.height);
+			
+			ctx.drawImage(img, 0, 0, canvas.width, canvas.height);
 			drawBoundingBoxes(ctx, detections);
 		};
 	};
@@ -36,9 +44,10 @@ const ImageRendererComponent = () => {
 	useEffect(() => {
 		if (canvasRef.current && frame && detections.length > 0) {
 			const canvas = canvasRef.current;
-			const ctx = canvas.getContext("2d");
-			if (ctx) {
-				drawFrame(ctx, frame, detections);
+			
+			
+			if (canvas) {
+				drawFrame(canvas, frame, detections);
 			}
 		}
 	}, [frame, detections]);
