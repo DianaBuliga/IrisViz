@@ -19,9 +19,9 @@ const getBoxStyle = (classType: string) => {
 	}
 };
 
-export const drawBoundingBoxes = (ctx: CanvasRenderingContext2D, detections: any[]) => {
+export const drawBoundingBoxes = (ctx: CanvasRenderingContext2D, detections: any[], scale: number = 1) => {
 	detections.forEach((obj) => {
-		const [x1, y1, x2, y2] = obj.box;
+		const [x1, y1, x2, y2] = obj.box.map((coordinate: any) => coordinate * scale);
 		ctx.beginPath();
 		ctx.rect(x1, y1, x2 - x1, y2 - y1);
 		ctx.lineWidth = 1.8;

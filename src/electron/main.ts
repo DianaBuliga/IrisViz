@@ -16,6 +16,7 @@ const createWindow = () => {
 		height: 600,
 		frame: false,
 		autoHideMenuBar: true,
+		resizable: true,
 		webPreferences: {
 			preload: path.join(__dirname, "../electron/preload.js"),
 			contextIsolation: true,
