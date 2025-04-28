@@ -31,14 +31,13 @@ type TabStore = {
 const cleanEmptyPanels = (panels: Panel[]): Panel[] => {
 	return panels
 		.map(panel => {
+			
 			let cleanedChildren = panel.children ? cleanEmptyPanels(panel.children) : undefined;
 			
-			// If it's a container with only one child, flatten it
 			if (cleanedChildren && cleanedChildren.length === 1) {
 				return cleanedChildren[0];
 			}
 			
-			// Remove empty containers (no tabs, no children)
 			if (panel.tabs.length === 0 && (!cleanedChildren || cleanedChildren.length === 0)) {
 				return null;
 			}
@@ -69,6 +68,20 @@ const useTabStore = create<TabStore>((set) => ({
 	currentPanel: firstId,
 	addTab: (panelId, title, icon, component) => {
 		set((state) => {
+			
+			let panels = [...state.panels];
+			
+			if (panels.length === 0) {
+				const newPanelId = uuidv4();
+				panels.push({
+					id: newPanelId,
+					tabs: [],
+					activeTab: '',
+					children: [],
+				});
+				panelId = newPanelId;
+			}
+			
 			const newTab: Tab = {
 				id: uuidv4(),
 				title,
@@ -108,6 +121,14 @@ const useTabStore = create<TabStore>((set) => ({
 				return panels.map(panel => {
 					if (panel.id === panelId) {
 						const filteredTabs = panel.tabs.filter(tab => tab.id !== tabId);
+						// if only a tab remaining in the app, do not remove the panel
+						if (filteredTabs.length === 0) {
+							return {
+								...panel,
+								tabs: filteredTabs,
+								activeTab: '', // No active tab, but keep the panel
+							};
+						}
 						return {
 							...panel,
 							tabs: filteredTabs,
@@ -126,7 +147,6 @@ const useTabStore = create<TabStore>((set) => ({
 			
 			const updatedPanels = removeTabFromPanels(state.panels);
 			
-			// Step 2: Clean empty panels after removing the tab
 			const cleanedPanels = cleanEmptyPanels(updatedPanels);
 			
 			const panelStillExists = cleanedPanels.some(p => p.id === state.currentPanel || p.children?.some(c => c.id === state.currentPanel));
@@ -274,7 +294,7 @@ const useTabStore = create<TabStore>((set) => ({
 						};
 						
 						return {
-							id: uuidv4(), // this becomes a parent panel now
+							id: uuidv4(),
 							tabs: [],
 							activeTab: '',
 							splitType,

@@ -7,6 +7,7 @@ interface WebSocketMessage {
 }
 
 const subscribers: Record<string, MessageHandler[]> = {};
+const lastMessages: Record<string, any> = {};
 
 const socket = new WebSocket('ws://localhost:8081');
 
@@ -24,15 +25,21 @@ socket.onmessage = (event: MessageEvent) => {
 			data.forEach((item: any) => {
 				const {type} = item;
 				
-				if (type && subscribers[type]) {
-					subscribers[type].forEach((callback) => callback(item));
+				if (type) {
+					lastMessages[type] = item;
+					if (subscribers[type]) {
+						subscribers[type].forEach((callback) => callback(item));
+					}
 				}
 			});
 		} else {
 			const {type} = data;
 			
-			if (type && subscribers[type]) {
-				subscribers[type].forEach((callback) => callback(data));
+			if (type) {
+				lastMessages[type] = data; // 🆕 save last message
+				if (subscribers[type]) {
+					subscribers[type].forEach((callback) => callback(data));
+				}
 			}
 		}
 		
@@ -46,6 +53,10 @@ export function subscribeTo(type: string, callback: MessageHandler): void {
 		subscribers[type] = [];
 	}
 	subscribers[type].push(callback);
+	
+	if (lastMessages[type]) {
+		callback(lastMessages[type]);
+	}
 }
 
 export function unsubscribeFrom(type: string, callback: MessageHandler): void {
