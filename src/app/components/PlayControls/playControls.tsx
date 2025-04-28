@@ -1,7 +1,13 @@
-import React, {useCallback} from 'react';
+import React, {useCallback, useMemo} from 'react';
+
 import PlayArrowIcon from '@mui/icons-material/PlayArrow';
 import PauseIcon from '@mui/icons-material/Pause';
+import SkipPreviousIcon from '@mui/icons-material/SkipPrevious';
+import SkipNextIcon from '@mui/icons-material/SkipNext';
+
 import {sendMessage} from "../../websocket/websocket";
+import {Slider} from '@mui/material';
+import './playControls.scss';
 
 const PlayControlsComponent = () => {
 	
@@ -17,13 +23,31 @@ const PlayControlsComponent = () => {
 		setPlayControls(!playControls);
 	}, [playControls])
 	
+	const playIcon = useMemo(() => {
+		return !playControls ?
+			<PlayArrowIcon className='playButton' onClick={handlePlayEvent}/>
+			:
+			<PauseIcon className='playButton' onClick={handlePlayEvent}/>;
+	}, [playControls])
+	
 	return (
-		(
-			!playControls ?
-				<PlayArrowIcon onClick={handlePlayEvent}/>
-				:
-				<PauseIcon onClick={handlePlayEvent}/>
-		)
+		<div className='playControls'>
+			<SkipPreviousIcon className='skipButton'/>
+			{playIcon}
+			<SkipNextIcon className='skipButton'/>
+			
+			<div className='timeValue'>0:0:0</div>
+			
+			<Slider
+				className='slider'
+				size="small"
+				defaultValue={70}
+				aria-label="Small"
+				valueLabelDisplay="auto"
+			/>
+			<div className='timeValue'>0:10:0</div>
+		
+		</div>
 	);
 }
 

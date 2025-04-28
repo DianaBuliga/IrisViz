@@ -1,0 +1,27 @@
+.playControls {
+  display: inline-flex;
+  width: 100%;
+}
+
+.slider {
+  margin: auto 0.5rem;
+}
+
+.timeValue {
+  margin-left: 0.5rem;
+  font-size: small;
+  margin-top: auto;
+  margin-bottom: auto;
+}
+
+.skipButton {
+  font-size: 1.5rem !important;
+  margin-top: auto;
+  margin-bottom: auto;
+}
+
+.playButton {
+  font-size: 2rem !important;
+  margin-top: auto;
+  margin-bottom: auto;
+}
