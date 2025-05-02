@@ -1,13 +1,16 @@
 import {app, BrowserWindow} from 'electron';
 import path from 'path';
-import electronDebug from 'electron-debug';
-import installExtension, {REACT_DEVELOPER_TOOLS} from "electron-devtools-installer";
 
-const {ipcMain} = require('electron')
-
-electronDebug({showDevTools: true});
+const {ipcMain, dialog} = require('electron');
 
 const isDev = process.env.NODE_ENV === 'development';
+if (!isDev)
+	try {
+		require('electron-debug')();
+	} catch (e) {
+		console.warn('electron-debug not available');
+	}
+
 
 let mainWindow: BrowserWindow;
 const createWindow = () => {
@@ -28,16 +31,14 @@ const createWindow = () => {
 	const indexPath = path.join(__dirname, '../app/index.html');
 	if (isDev) {
 		mainWindow.loadURL('http://localhost:3000');
-		installExtension(REACT_DEVELOPER_TOOLS)
-			.then((name) => console.log(`Added Extension:  ${name}`))
-			.catch((err) => console.log("An error occurred: ", err));
+		mainWindow.webContents.openDevTools();
 	} else {
 		mainWindow.loadFile(indexPath);
 	}
 }
 
 ipcMain.on('close-app', () => {
-	app.quit()
+	app.exit();
 })
 
 ipcMain.on("minimize-window", () => {
@@ -52,6 +53,17 @@ ipcMain.on("restore-window", () => {
 	mainWindow.unmaximize();
 });
 
+ipcMain.handle("open-file-dialog", async () => {
+	const {canceled, filePaths} = await dialog.showOpenDialog({
+		properties: ['openFile'],
+		filters: [{name: 'Videos', extensions: ['mp4', 'mkv', 'jpg', 'png']}]
+	});
+	
+	if (canceled || filePaths.length === 0) return null;
+	return filePaths[0];
+});
+
+
 app.whenReady().then(() => {
 	createWindow()
 	
@@ -64,6 +76,6 @@ app.whenReady().then(() => {
 
 app.on('window-all-closed', () => {
 	if (process.platform !== 'darwin') {
-		app.quit()
+		app.exit();
 	}
 });

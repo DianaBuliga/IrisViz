@@ -1,15 +1,15 @@
-import {sendMessage} from "../../websocket/websocket";
+import useTabStore from "../Layout/layoutStore";
+import {ImageRenderer} from '../../components/ImageRenderer/configuration';
+import {LineChart} from '../../components/LineChart/configuration';
+import {Table} from '../../components/Table/configuration';
+import {jumpToBeginning, openVideo, startStopAction} from "../../utils";
+
+
+const {addTab, currentPanel} = useTabStore.getState();
 
 const menuItems: { [key: string]: { label: string; action?: () => void; shortcut?: string }[] } = {
 	File: [
-		{
-			label: "New File",
-			action: () => sendMessage(
-				{type: "openFile", payload: "D:\\backend\\videoReaderBackend\\intersection1.mp4"}
-			)
-		},
-		{label: "Open File", action: () => console.log("Open File Clicked")},
-		{label: "Save", action: () => console.log("Save Clicked")},
+		{label: "Open Video", action: () => openVideo()},
 		{
 			label: "Exit",
 			action: () => {
@@ -18,39 +18,35 @@ const menuItems: { [key: string]: { label: string; action?: () => void; shortcut
 			shortcut: "Ctrl+Q",
 		},
 	],
-	Edit: [
-		{label: "Undo", action: () => console.log("Undo Clicked")},
-		{label: "Redo", action: () => console.log("Redo Clicked")},
-		{label: "Cut", action: () => console.log("Cut Clicked")},
-		{label: "Copy", action: () => console.log("Copy Clicked")},
-		{label: "Paste", action: () => console.log("Paste Clicked")},
-	],
 	Actions: [
 		{
-			label: "Open File",
-			action: () => sendMessage(
-				{type: "openFile", payload: "D:\\backend\\videoReaderBackend\\frame0.jpg"}
-			)
+			label: "Open Video",
+			action: () => openVideo(),
+			shortcut: "Ctrl+O",
 		},
 		{
-			label: "Play",
-			action: () => sendMessage(
-				{type: "playVideo", payload: ""}
-			)
+			label: "Play/Stop",
+			action: () => startStopAction()
 		},
-		{label: "Cut", action: () => console.log("Cut Clicked")},
-		{label: "Copy", action: () => console.log("Copy Clicked")},
-		{label: "Paste", action: () => console.log("Paste Clicked")},
+		{label: "Jump to Beginning", action: () => jumpToBeginning()},
+		{label: "Jump to End", action: () => console.log("Copy Clicked")},
 	],
-	View: [
-		{label: "Zoom In", action: () => console.log("Zoom In Clicked")},
-		{label: "Zoom Out", action: () => console.log("Zoom Out Clicked")},
-		{label: "Reset Layout", action: () => console.log("Reset Layout Clicked")},
+	Components: [
+		{
+			label: "Image Renderer",
+			action: () => addTab(currentPanel, ImageRenderer.title, ImageRenderer.icon, ImageRenderer.component),
+		},
+		{
+			label: "Line Chart",
+			action: () => addTab(currentPanel, LineChart.title, LineChart.icon, LineChart.component),
+		},
+		{
+			label: "Table",
+			action: () => addTab(currentPanel, Table.title, Table.icon, Table.component),
+		},
 	],
 	Help: [
 		{label: "About", action: () => console.log("About Clicked")},
-		{label: "Documentation", action: () => console.log("Documentation Clicked")},
-		{label: "Report Issue", action: () => console.log("Report Issue Clicked")},
 	],
 };
 

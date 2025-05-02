@@ -5,6 +5,7 @@ declare global {
 		electron: {
 			send: (channel: string, data?: any) => void;
 			receive: (channel: string, callback: (...args: any[]) => void) => void;
+			openFileDialog: () => Promise<string | null>;
 		};
 	}
 }

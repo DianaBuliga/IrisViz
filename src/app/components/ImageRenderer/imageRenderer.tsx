@@ -20,9 +20,9 @@ const ImageRendererComponent = () => {
 	}, []);
 	
 	const handleMessage = (data: any) => {
-		setFrame(data.frame);
-		setDetections(data.objects);
-		setImageSize({width: data.width, height: data.height});
+		setFrame(data.frameData.frame);
+		setDetections(data.frameData.objects);
+		setImageSize({width: data.frameData.width, height: data.frameData.height});
 	};
 	
 	const drawFrame = (
