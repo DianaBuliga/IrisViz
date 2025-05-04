@@ -28,7 +28,7 @@ const createWindow = () => {
 	})
 	mainWindow.setMenuBarVisibility(false);
 	
-	const indexPath = path.join(__dirname, '../app/index.html');
+	const indexPath = path.join(__dirname, '/app/index.html');
 	if (isDev) {
 		mainWindow.loadURL('http://localhost:3000');
 		mainWindow.webContents.openDevTools();

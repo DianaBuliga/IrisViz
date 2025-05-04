@@ -5,5 +5,5 @@ import PlayControlsComponent from "./playControls";
 export const PlayControls = {
 	title: "PlayControls",
 	icon: <PlayArrowIcon/>,
-	component: <PlayControlsComponent/>,
+	component: PlayControlsComponent,
 };

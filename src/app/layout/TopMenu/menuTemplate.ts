@@ -1,11 +1,10 @@
 import useTabStore from "../Layout/layoutStore";
 import {ImageRenderer} from '../../components/ImageRenderer/configuration';
 import {LineChart} from '../../components/LineChart/configuration';
+import {PieChart} from "../../components/PieChart/configuration";
 import {Table} from '../../components/Table/configuration';
 import {jumpToBeginning, openVideo, startStopAction} from "../../utils";
 
-
-const {addTab, currentPanel} = useTabStore.getState();
 
 const menuItems: { [key: string]: { label: string; action?: () => void; shortcut?: string }[] } = {
 	File: [
@@ -34,15 +33,32 @@ const menuItems: { [key: string]: { label: string; action?: () => void; shortcut
 	Components: [
 		{
 			label: "Image Renderer",
-			action: () => addTab(currentPanel, ImageRenderer.title, ImageRenderer.icon, ImageRenderer.component),
+			action: () => {
+				const {addTab, currentPanel} = useTabStore.getState();
+				
+				addTab(currentPanel, ImageRenderer.title, ImageRenderer.icon, ImageRenderer.component);
+			},
 		},
 		{
 			label: "Line Chart",
-			action: () => addTab(currentPanel, LineChart.title, LineChart.icon, LineChart.component),
+			action: () => {
+				const {addTab, currentPanel} = useTabStore.getState();
+				addTab(currentPanel, LineChart.title, LineChart.icon, LineChart.component);
+			},
+		},
+		{
+			label: "Pie Chart",
+			action: () => {
+				const {addTab, currentPanel} = useTabStore.getState();
+				addTab(currentPanel, PieChart.title, PieChart.icon, PieChart.component);
+			},
 		},
 		{
 			label: "Table",
-			action: () => addTab(currentPanel, Table.title, Table.icon, Table.component),
+			action: () => {
+				const {addTab, currentPanel} = useTabStore.getState();
+				addTab(currentPanel, Table.title, Table.icon, Table.component);
+			},
 		},
 	],
 	Help: [

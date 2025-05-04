@@ -22,9 +22,8 @@ const PlayControlsComponent = () => {
 	
 	const [isImage, setIsImage] = useState<boolean>(false);
 	const [videoDuration, setVideoDuration] = useState<number>(0);
-	const [sliderValue, setSliderValue] = useState<number>(0);
 	
-	const {playControl} = stateStore();
+	const {playControl, timestamp, setTimestamp} = stateStore();
 	
 	useEffect(() => {
 		subscribeTo("player", handleMessage);
@@ -37,7 +36,7 @@ const PlayControlsComponent = () => {
 	const handleMessage = (data: any) => {
 		if (data.videoData) setVideoDuration(data.videoData.videoDuration);
 		if (data.isImage) setIsImage(data.isImage);
-		if (data.timeFrame || data.timeFrame === 0) setSliderValue(data.timeFrame);
+		if (data.timeFrame || data.timeFrame === 0) setTimestamp(data.timeFrame);
 	};
 	
 	const playIcon = useMemo(() => {
@@ -52,8 +51,8 @@ const PlayControlsComponent = () => {
 	}, [videoDuration]);
 	
 	const currentSliderValue: string = useMemo(() => {
-		return !isImage ? formatTimeWithFraction(sliderValue) : '0:0:0';
-	}, [sliderValue]);
+		return !isImage ? formatTimeWithFraction(timestamp) : '0:0:0';
+	}, [timestamp]);
 	
 	return (
 		<div className='playControls'>
@@ -69,7 +68,7 @@ const PlayControlsComponent = () => {
 				min={0}
 				max={videoDuration}
 				step={0.1}
-				value={sliderValue}
+				value={timestamp}
 				aria-label="Small"
 				valueLabelDisplay="auto"
 			/>

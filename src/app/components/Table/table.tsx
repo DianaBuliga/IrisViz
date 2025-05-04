@@ -49,7 +49,6 @@ const TableComponent = () => {
 	}, []);
 	
 	const handleMessage = (data: any) => {
-		console.log(data);
 		setMessage(data);
 	};
 	

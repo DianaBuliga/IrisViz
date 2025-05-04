@@ -1,12 +1,12 @@
 import create from 'zustand';
 import {v4 as uuidv4} from 'uuid';
-import React, {JSX} from "react";
+import React from "react";
 
 export type Tab = {
 	id: string;
 	title: string;
 	icon: React.ReactNode;
-	component: JSX.Element;
+	component: React.ComponentType<any>;
 };
 
 export type Panel = {
@@ -20,7 +20,7 @@ export type Panel = {
 type TabStore = {
 	panels: Panel[];
 	currentPanel: string;
-	addTab: (panelId: string, title: string, icon: React.ReactNode, component: JSX.Element) => void;
+	addTab: (panelId: string, title: string, icon: React.ReactNode, component: React.ComponentType<any>) => void;
 	removeTab: (panelId: string, tabId: string) => void;
 	setActiveTab: (panelId: string, tabId: string) => void;
 	moveTab: (sourcePanelId: string, targetPanelId: string, tabId: string) => void;
@@ -108,7 +108,7 @@ const useTabStore = create<TabStore>((set) => ({
 				});
 			
 			return {
-				panels: addTabToPanel(state.panels),
+				panels: addTabToPanel(panels),
 				currentPanel: panelId,
 			};
 		});

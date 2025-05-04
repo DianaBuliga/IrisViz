@@ -21,6 +21,8 @@ export const startStopAction = () => {
 	setPlayControl(!playControl);
 }
 
+const {setCleanTab} = stateStore.getState();
 export const jumpToBeginning = () => {
 	sendMessage({type: "jumpToBeginning", payload: ""});
+	setCleanTab(true);
 }

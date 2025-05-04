@@ -5,5 +5,5 @@ import TableViewIcon from '@mui/icons-material/TableView';
 export const Table = {
 	title: "Table",
 	icon: <TableViewIcon/>,
-	component: <TableComponent/>,
+	component: TableComponent,
 };

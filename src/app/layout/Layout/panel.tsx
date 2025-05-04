@@ -54,7 +54,10 @@ const PanelComponent = ({panel}: PanelComponentProps) => {
 				))}
 			</div>
 			<div className="content">
-				{panel.tabs.find((t: Tab) => t.id === panel.activeTab)?.component}
+				{((): any => {
+					const ActiveTabComponent = panel.tabs.find((t: Tab) => t.id === panel.activeTab)?.component;
+					return ActiveTabComponent ? React.createElement(ActiveTabComponent) : null;
+				})()}
 			</div>
 		</div>
 	);
