@@ -1,0 +1,17 @@
+.rightMenu {
+  position: absolute;
+  width: 24px;
+  top: 33px;
+  bottom: 33px;
+  right: 0;
+  background: var(--input-background);
+  height: -webkit-fill-available;
+  display: flex;
+  justify-content: center;
+}
+
+.rightMenu svg {
+  font-size: medium;
+  cursor: pointer;
+  margin: 10px;
+}

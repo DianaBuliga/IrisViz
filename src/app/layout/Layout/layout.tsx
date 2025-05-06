@@ -2,7 +2,6 @@ import React from 'react';
 import useTabStore from './layoutStore';
 import './layout.scss';
 import LeftMenu from "../LeftMenu/leftMenu";
-import Footer from "../Footer/footer";
 import PanelComponent from "./panel"
 import {PanelGroup} from 'react-resizable-panels';
 import PlayControlsComponent from "../../components/PlayControls/playControls";
@@ -23,7 +22,6 @@ const Layout = () => {
 			
 			</PanelGroup>
 			<PlayControlsComponent/>
-			<Footer/>
 		</>
 	);
 };

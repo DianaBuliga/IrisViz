@@ -6,6 +6,7 @@
   display: inline-flex !important;
   -webkit-app-region: drag;
   user-select: none;
+  z-index: 2202;
 }
 
 .appBox {
@@ -14,6 +15,7 @@
   height: 2rem;
   right: auto;
   justify-content: space-between;
+  z-index: 2202;
 }
 
 .appBox div {

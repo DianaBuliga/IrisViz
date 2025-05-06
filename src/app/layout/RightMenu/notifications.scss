@@ -1,0 +1,92 @@
+.drawer div {
+  background-color: var(--background-transparent) !important;
+  width: 19rem;
+  height: calc(100% - 66px) !important;
+  margin-top: 33px;
+  margin-bottom: 32px;
+  padding: 0 !important;
+  box-sizing: border-box;
+  overflow: hidden;
+}
+
+.css-11n7drg-MuiPaper-root-MuiDrawer-paper {
+  border: 1px solid var(--border-color);
+  border-left: 1px solid var(--border-color) !important;
+}
+
+.notificationPanel {
+  padding: 0 !important;
+  margin: 0 !important;
+  width: 100%;
+}
+
+.notificationPanel .notificationPanelHeader {
+  display: inline-flex;
+  height: 1rem !important;
+  margin-top: 0 !important;
+  padding: 20px !important;
+
+}
+
+.notificationPanel .notificationPanelHeader h3 {
+  margin: auto !important;
+  color: var(--primary-text);
+}
+
+.notificationPanel div button {
+  position: absolute;
+  float: right;
+  right: 0;
+  margin-top: -20px;
+  color: var(--primary-text);
+}
+
+.notificationPanel div button:hover {
+  color: var(--secondary-accent);
+  cursor: pointer;
+}
+
+.notificationPanel div button svg {
+  font-size: medium;
+}
+
+.notificationList {
+  display: inline-block;
+  color: var(--primary-text);
+  margin-top: -30px !important;
+}
+
+.notificationList li {
+  border: 1px solid var(--border-color);
+  padding: 0;
+}
+
+.notificationList li div {
+  margin: 10px;
+  display: inline;
+}
+
+.notificationList li div span {
+  font-size: small;
+}
+
+.notificationIcon {
+  font-size: 1.2rem;
+
+  &.error {
+	color: var(--error-color, red);
+  }
+
+  &.warning {
+	color: var(--warning-color, orange);
+  }
+
+  &.success {
+	color: var(--success-color, green);
+  }
+
+  &.info {
+	color: var(--info-color, dodgerblue);
+  }
+}
+

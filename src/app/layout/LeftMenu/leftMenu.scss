@@ -1,6 +1,5 @@
 .leftMenu {
   width: 3rem;
-  //height: 100%;
   display: inline-block;
   position: absolute !important;
   background-color: var(--input-background);
@@ -8,6 +7,8 @@
   margin-top: 1.5rem !important;
   padding-bottom: 0 !important;
   padding-top: 0 !important;
+  height: -webkit-fill-available;
+  bottom: 32px;
 }
 
 .listItem {

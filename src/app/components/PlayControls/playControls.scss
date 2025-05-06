@@ -1,6 +1,17 @@
 .playControls {
   display: inline-flex;
-  width: 100%;
+  width: calc(100% - 72px);
+  margin-left: 48px;
+}
+
+.playControls svg {
+  padding: 6px;
+  border-radius: 4px;
+}
+
+.playControls svg:hover {
+  cursor: pointer;
+  background-color: #3E3E3E;
 }
 
 .slider {

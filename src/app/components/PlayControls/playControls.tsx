@@ -10,6 +10,7 @@ import {Slider} from '@mui/material';
 import './playControls.scss';
 import stateStore from '../../store/stateStore';
 import {jumpToBeginning, startStopAction} from "../../utils";
+import log from 'electron-log/renderer';
 
 function formatTimeWithFraction(seconds: number): string {
 	const hrs = Math.floor(seconds / 3600);
@@ -40,6 +41,7 @@ const PlayControlsComponent = () => {
 	};
 	
 	const playIcon = useMemo(() => {
+		log.info('Log from the renderer process');
 		return !playControl ?
 			<PlayArrowIcon className='playButton' onClick={startStopAction}/>
 			:

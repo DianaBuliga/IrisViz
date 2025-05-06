@@ -2,6 +2,9 @@ import {app, BrowserWindow} from 'electron';
 import path from 'path';
 
 const {ipcMain, dialog} = require('electron');
+const log = require('electron-log');
+log.initialize();
+log.info('App is starting...');
 
 const isDev = process.env.NODE_ENV === 'development';
 if (!isDev)

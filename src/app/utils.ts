@@ -1,6 +1,10 @@
 import {sendMessage} from "./websocket/websocket";
 import stateStore from "./store/stateStore";
 
+export const logToMain = (level: 'info' | 'warn' | 'error', message: string) => {
+	window.electron.send('log-message', {level, message});
+};
+
 export const openVideo = async () => {
 	const filePath = await window.electron.openFileDialog();
 	if (filePath) {
