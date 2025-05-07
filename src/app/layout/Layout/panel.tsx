@@ -28,10 +28,8 @@ const PanelComponent = ({panel}: PanelComponentProps) => {
 			if (panelRect && clientOffset) {
 				const isOverHeader = clientOffset.y < panelRect.top + 40; // Adjust this value to suit the height of your panel header
 				if (isOverHeader) {
-					// Move the tab to this panel (do not split)
 					moveTab(item.panelId, panel.id, item.tabId);
 				} else {
-					// Split the panel (this behavior can remain as it was before)
 					const isHorizontalMiddle = clientOffset.y > panelRect.top + panelRect.height / 2;
 					const splitType = isHorizontalMiddle ? "vertical" : "horizontal";
 					

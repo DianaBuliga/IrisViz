@@ -15,14 +15,9 @@ type FrameMessage = {
 	};
 };
 
-type AnchorPosition = {
-	vertical: 'top' | 'middle' | 'bottom';
-	horizontal: 'left' | 'center' | 'right';
-};
-
 
 const PieChartComponent = () => {
-	const {chartData, dataLabel, addData, updateLabels} = chartStore();
+	const {dataLabel} = chartStore();
 	const [pieData, setPieData] = useState<{ id: number; value: number; label: string }[]>([]);
 	
 	const {cleanTab, setCleanTab} = stateStore();

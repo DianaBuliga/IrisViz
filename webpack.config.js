@@ -3,13 +3,13 @@ const HtmlWebpackPlugin = require('html-webpack-plugin');
 const CopyPlugin = require("copy-webpack-plugin");
 
 module.exports = {
-	mode: 'development',
+	mode: 'production',
 	entry: './src/app/index.tsx',
 	output: {
 		filename: 'bundle.js',
 		path: path.resolve(__dirname, 'dist/app'),
 		// when create a package, change to './'
-		publicPath: '/',
+		publicPath: './',
 	},
 	externals: {
 		electron: "require('electron')",

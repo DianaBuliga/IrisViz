@@ -1,3 +1,5 @@
+import log from "electron-log";
+
 type MessageHandler = (data: any) => void;
 
 interface WebSocketMessage {
@@ -12,7 +14,7 @@ const lastMessages: Record<string, any> = {};
 const socket = new WebSocket('ws://localhost:8081');
 
 socket.onopen = () => {
-	console.log("✅ Connected to Python server");
+	log.info('Connected to server');
 };
 
 socket.onmessage = (event: MessageEvent) => {
@@ -36,7 +38,7 @@ socket.onmessage = (event: MessageEvent) => {
 			const {type} = data;
 			
 			if (type) {
-				lastMessages[type] = data; // 🆕 save last message
+				lastMessages[type] = data;
 				if (subscribers[type]) {
 					subscribers[type].forEach((callback) => callback(data));
 				}
@@ -44,6 +46,7 @@ socket.onmessage = (event: MessageEvent) => {
 		}
 		
 	} catch (err) {
+		log.error('Could not parsing WebSocket message');
 		console.error(" Error parsing WebSocket message:", err);
 	}
 };
@@ -68,7 +71,9 @@ export function unsubscribeFrom(type: string, callback: MessageHandler): void {
 export function sendMessage(message: WebSocketMessage): void {
 	if (socket.readyState === WebSocket.OPEN) {
 		socket.send(JSON.stringify(message));
+		log.info('Sent message', message);
 	} else {
-		console.warn("⚠️ WebSocket not ready. Message not sent:", message);
+		log.warn('WebSocket not ready. Message not sent');
+		console.warn("WebSocket not ready. Message not sent:", message);
 	}
 }

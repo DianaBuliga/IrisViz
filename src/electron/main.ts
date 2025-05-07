@@ -31,16 +31,20 @@ const createWindow = () => {
 	})
 	mainWindow.setMenuBarVisibility(false);
 	
-	const indexPath = path.join(__dirname, '/app/index.html');
-	if (isDev) {
-		mainWindow.loadURL('http://localhost:3000');
-		mainWindow.webContents.openDevTools();
-	} else {
-		mainWindow.loadFile(indexPath);
-	}
+	// const indexPath = path.join(__dirname, './app/index.html');
+	// if (isDev) {
+	// 	mainWindow.loadURL('http://localhost:3000');
+	// 	mainWindow.webContents.openDevTools();
+	// } else {
+	// mainWindow.loadFile(indexPath);
+	// }
+	const indexPath = path.join(__dirname, '../app/index.html');
+	mainWindow.loadFile(indexPath);
+	log.error(indexPath)
 }
 
 ipcMain.on('close-app', () => {
+	log.info('App is closing...');
 	app.exit();
 })
 
@@ -79,6 +83,7 @@ app.whenReady().then(() => {
 
 app.on('window-all-closed', () => {
 	if (process.platform !== 'darwin') {
+		log.info('App is closing...');
 		app.exit();
 	}
 });

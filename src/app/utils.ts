@@ -1,9 +1,6 @@
 import {sendMessage} from "./websocket/websocket";
 import stateStore from "./store/stateStore";
-
-export const logToMain = (level: 'info' | 'warn' | 'error', message: string) => {
-	window.electron.send('log-message', {level, message});
-};
+import log from "electron-log";
 
 export const openVideo = async () => {
 	const filePath = await window.electron.openFileDialog();
@@ -12,6 +9,7 @@ export const openVideo = async () => {
 			type: "openFile",
 			payload: filePath,
 		});
+		log.info('Send file path:', filePath);
 	}
 }
 

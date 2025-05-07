@@ -41,7 +41,6 @@ const NotificationListPanel: React.FC<Props> = ({open, onClose}) => {
 							{n.type === 'info' && <InfoIcon className="notificationIcon info"/>}
 							<ListItemText
 								primary={n.message}
-								// secondary={`Type: ${n.type}`}
 							/>
 						</ListItem>
 					))}

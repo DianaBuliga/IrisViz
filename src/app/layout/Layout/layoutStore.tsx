@@ -116,17 +116,15 @@ const useTabStore = create<TabStore>((set) => ({
 	
 	removeTab: (panelId, tabId) => {
 		set((state) => {
-			// Step 1: Actually remove the tab from the panels
 			const removeTabFromPanels = (panels: Panel[]): Panel[] => {
 				return panels.map(panel => {
 					if (panel.id === panelId) {
 						const filteredTabs = panel.tabs.filter(tab => tab.id !== tabId);
-						// if only a tab remaining in the app, do not remove the panel
 						if (filteredTabs.length === 0) {
 							return {
 								...panel,
 								tabs: filteredTabs,
-								activeTab: '', // No active tab, but keep the panel
+								activeTab: '',
 							};
 						}
 						return {
@@ -192,7 +190,6 @@ const useTabStore = create<TabStore>((set) => ({
 						return {...panel, tabs: filteredTabs};
 					}
 					
-					// Traverse children if exist
 					if (panel.children) {
 						return {
 							...panel,
@@ -240,14 +237,13 @@ const useTabStore = create<TabStore>((set) => ({
 				return {currentPanel: panelId};
 			}
 			
-			return {}; // panel doesn't exist
+			return {};
 		});
 	},
 	splitPanel: (targetPanelId, splitType, tabId) => {
 		set((state) => {
 			let tabToMove: Tab | null = null;
 			
-			// Step 1: Remove the tab from its source panel
 			const removeTab = (panels: Panel[]): Panel[] => {
 				return panels.map(panel => {
 					if (panel.tabs.some(t => t.id === tabId)) {
@@ -275,7 +271,6 @@ const useTabStore = create<TabStore>((set) => ({
 				});
 			};
 			
-			// Step 2: Replace the target panel with a group of two new panels
 			const splitInPlace = (panels: Panel[]): Panel[] => {
 				return panels.map(panel => {
 					if (panel.id === targetPanelId && tabToMove) {
